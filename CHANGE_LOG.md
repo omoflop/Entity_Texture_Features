@@ -1,5 +1,8 @@
 **ETF Changelog:**
 
+[forge port of V3.1.2]
+- shoulder parrot support re-enabled
+
 [forge port of V3.0.4]
 - shoulder parrot support disabled (could not get working)
 

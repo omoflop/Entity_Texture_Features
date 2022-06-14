@@ -36,7 +36,7 @@ public class ETFConfig {
     public int blinkLength = 1;
     public boolean enableTridents = true;
     public boolean enableElytra = true;
-    public boolean elytraThicknessFix = true;
+    public boolean elytraThicknessFix = false;
 
     public DebugLogMode debugLoggingMode = DebugLogMode.None;
 
