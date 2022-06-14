@@ -1,5 +1,9 @@
 **ETF Changelog:**
 
+[V3.1.2-mc1.18]
+
+- fixed a crash related to player skins that could occur when leaving a server
+
 [V3.0.4]
 
 - chest & shulker custom texture caching is more consistent
