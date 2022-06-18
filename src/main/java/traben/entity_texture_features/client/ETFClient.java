@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.unimi.dsi.fastutil.objects.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.fml.ModList;
 import org.slf4j.LoggerFactory;
 import traben.entity_texture_features.client.utils.ETFUtils;
 import traben.entity_texture_features.config.ETFConfig;
@@ -21,7 +21,6 @@ import net.minecraftforge.network.NetworkConstants;
 import traben.entity_texture_features.config.ETFConfigScreen;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -30,7 +29,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.nio.file.Path;
-import java.util.function.BiFunction;
 
 @Mod("etf")
 public class ETFClient {
@@ -124,7 +122,7 @@ public class ETFClient {
     public static int mooshroomBrownCustomShroom = 0;
     public static Boolean lecternHasCustomTexture = null;
     //config object
-    public static ETFConfig ETFConfigData;
+    public static ETFConfig ETFConfigData = etf$loadConfig(true);;
 
     //logging object
     public static Logger LOGGER = LoggerFactory.getLogger("Entity Texture Features");;// = ETFLogger.create();
@@ -133,11 +131,20 @@ public class ETFClient {
     public ETFClient() {
         if(FMLEnvironment.dist == Dist.CLIENT) {
             LOGGER.info("[Entity Texture Features]: Loading! 1.18.x");
-            etf$loadConfig();
+            //etf$loadConfig();
             // Register the configuration GUI factory
-            ModLoadingContext.get().registerExtensionPoint(
-                    ConfigGuiHandler.ConfigGuiFactory.class,
-                    () -> new ConfigGuiHandler.ConfigGuiFactory((minecraftClient, screen) -> new ETFConfigScreen().getConfigScreen(screen, false)));
+
+            if(ModList.get().isLoaded("cloth-config-forge")) {
+                ModLoadingContext.get().registerExtensionPoint(
+                        ConfigGuiHandler.ConfigGuiFactory.class,
+                        () -> new ConfigGuiHandler.ConfigGuiFactory((minecraftClient, screen) -> new ETFConfigScreen().getConfigScreen(screen, false)));
+            } else {
+                //I definitely didn't catch an error, you saw nothing...
+                System.out.println("[Entity Texture Features]: Mod settings cannot be edited in GUI without cloth config");
+
+            }
+
+
             ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         } else {
             LOGGER.info("[Entity Texture Features]: Attempting to load a clientside only mod on the server, refusing.");
@@ -149,21 +156,33 @@ public class ETFClient {
     // config code based on bedrockify & actually unbreaking fabric config code
     // https://github.com/juancarloscp52/BedrockIfy/blob/1.17.x/src/main/java/me/juancarloscp52/bedrockify/Bedrockify.java
     // https://github.com/wutdahack/ActuallyUnbreakingFabric/blob/1.18.1/src/main/java/wutdahack/actuallyunbreaking/ActuallyUnbreaking.java
-    public void etf$loadConfig() {
+    public static ETFConfig etf$loadConfig() {
+        return etf$loadConfig(false);
+    }
+
+    public static ETFConfig etf$loadConfig(boolean returnConfig) {
+        ETFConfig etf_config = null;
         File config = new File(CONFIG_DIR.toFile(), "entity_texture_features.json");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (config.exists()) {
             try {
                 FileReader fileReader = new FileReader(config);
-                ETFConfigData = gson.fromJson(fileReader, ETFConfig.class);
+                etf_config = gson.fromJson(fileReader, ETFConfig.class);
                 fileReader.close();
                 ETFUtils.saveConfig();
             } catch (IOException e) {
                 ETFUtils.logMessage("Config could not be loaded, using defaults", false);
+                etf_config = new ETFConfig();
             }
         } else {
-            ETFConfigData = new ETFConfig();
+            etf_config = new ETFConfig();
             ETFUtils.saveConfig();
+        }
+        if (returnConfig){
+            return etf_config ;
+        }else{
+            ETFConfigData = etf_config;
+            return null;
         }
     }
 

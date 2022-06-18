@@ -12,7 +12,7 @@ issueTrackerURL="https://github.com/Traben-0/EmissiveMod/issues"
 showAsResourcePack=false
 
 [[mods]]
-modId="etf"
+modId="entity_texture_features"
 version="${version}"
 displayName="Entity Texture Features"
 displayURL="https://github.com/Traben-0/EmissiveMod"
