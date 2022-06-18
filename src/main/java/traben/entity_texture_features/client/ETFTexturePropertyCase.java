@@ -26,6 +26,7 @@ public class ETFTexturePropertyCase {
     private final String[] names;//add
     private final String[] professions;
     private final String[] colors;//add
+    private final int screamingGoat; // 0 1 2 - dont true false
     private final int baby; // 0 1 2 - dont true false
     private final int weather; //0,1,2,3 - no clear rain thunder
     private final String[] health;
@@ -45,6 +46,7 @@ public class ETFTexturePropertyCase {
                                   String[] namesX,
                                   String[] professionsX,
                                   String[] collarColoursX,
+                                  int screamingGoat0,
                                   int baby012,
                                   int weather0123,
                                   String[] healthX,
@@ -61,6 +63,7 @@ public class ETFTexturePropertyCase {
         names = namesX != null ? namesX : new String[0];
         professions = professionsX != null ? professionsX : new String[0];
         colors = collarColoursX != null ? collarColoursX : new String[0];
+        screamingGoat = screamingGoat0;
         baby = baby012;
         weather = weather0123;
         health = healthX != null ? healthX : new String[0];
@@ -123,6 +126,7 @@ public class ETFTexturePropertyCase {
                 && heights.length == 0
                 && professions.length == 0
                 && colors.length == 0
+                && screamingGoat == 0
                 && baby == 0
                 && weather == 0
                 && health.length == 0
@@ -255,6 +259,12 @@ public class ETFTexturePropertyCase {
             }
             allBoolean = check;
         }
+
+
+        if (allBoolean && screamingGoat > 0 && entity instanceof GoatEntity goat) {
+            allBoolean = goat.isScreaming() ? screamingGoat == 1 : screamingGoat == 2;
+        }
+
         if (allBoolean && professions.length > 0 && entity instanceof VillagerEntity) {
             wasTestedByUpdateable = true;
             String entityProfession = ((VillagerEntity) entity).getVillagerData().getProfession().toString().toLowerCase().replace("minecraft:", "");

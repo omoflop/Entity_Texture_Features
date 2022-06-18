@@ -536,6 +536,7 @@ public class ETFUtils {
                     ArrayList<String> names = new ArrayList<>();
                     String[] professions = {};
                     String[] collarColours = {};
+                    int screamingGoat = 0; // 0 1 2 - dont true false
                     int baby = 0; // 0 1 2 - dont true false
                     int weather = 0; //0,1,2,3 - no clear rain thunder
                     String[] health = {};
@@ -642,6 +643,13 @@ public class ETFUtils {
                     if (props.containsKey("collarColors." + num) || props.containsKey("colors." + num)) {
                         collarColours = props.containsKey("collarColors." + num) ? props.getProperty("collarColors." + num).trim().split("\s+") : props.getProperty("colors." + num).trim().split("\s+");
                     }
+                    if (props.containsKey("screamingGoat." + num)) {
+                        String dataFromProps = props.getProperty("screamingGoat." + num).trim();
+                        switch (dataFromProps) {
+                            case "true" -> screamingGoat = 1;
+                            case "false" -> screamingGoat = 2;
+                        }
+                    }
                     if (props.containsKey("baby." + num)) {
                         String dataFromProps = props.getProperty("baby." + num).trim();
                         switch (dataFromProps) {
@@ -728,7 +736,7 @@ public class ETFUtils {
                     String[] namesArray = names.toArray(new String[0]);
 
                     if (suffixes.length != 0) {
-                        allCasesForTexture.add(new ETFTexturePropertyCase(suffixes, weights, biomes, heights, namesArray, professions, collarColours, baby, weather, health, moon, daytime, blocks, teams, num, sizes));
+                        allCasesForTexture.add(new ETFTexturePropertyCase(suffixes, weights, biomes, heights, namesArray, professions, collarColours, screamingGoat, baby, weather, health, moon, daytime, blocks, teams, num, sizes));
                     }
                 }
                 //for (ETFTexturePropertyCase t:
